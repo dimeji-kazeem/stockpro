@@ -61,8 +61,18 @@ portfolio_avg_return = sum(portfolio_returns) / len(portfolio_returns)
 portfolio_risk = (sum([r**2 for r in portfolio_risks]) / len(portfolio_risks))**0.5
 portfolio_sharpe_ratio = portfolio_avg_return / portfolio_risk
 
+# Calculate portfolio weights (equal-weighted portfolio)
+portfolio_weights = [1 / len(companies)] * len(companies)
+
 # Displaying the combined metrics for the portfolio
 st.write("## Portfolio Metrics")
 st.write("Average Annual Return:", portfolio_avg_return)
 st.write("Risk:", portfolio_risk)
 st.write("Sharpe Ratio:", portfolio_sharpe_ratio)
+
+# Calculate stock contributions to the portfolio
+total_contribution = sum([w * r for w, r in zip(portfolio_weights, portfolio_returns)])
+stock_contributions_percent = [(w * r) / total_contribution * 100 for w, r in zip(portfolio_weights, portfolio_returns)]
+contributions_df = pd.DataFrame({"Stock Symbol": selected_stocks, "Weight": portfolio_weights, "Contribution (%)": stock_contributions_percent})
+st.write("## Stock Contributions to Portfolio")
+st.write(contributions_df)
